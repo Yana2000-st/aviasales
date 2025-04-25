@@ -10,7 +10,8 @@
     "prepare": "husky install",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "echo \"No tests yet\""
   },
   "dependencies": {
     "react": "^19.0.0",
