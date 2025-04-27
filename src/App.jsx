@@ -9,8 +9,8 @@ const App = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content__wrapper}>
-        <Sorting />
         <Filters />
+        <Sorting />
         <TicketList />
         <Footer />
       </div>
