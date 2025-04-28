@@ -22,7 +22,7 @@ const filtersSlice = createSlice({
     toggleFilter(state, action) {
       const filterActive = action.payload;
       state[filterActive] = !state[filterActive];
-
+      //Если все отдельные фильтры активны, то ставим галочку на все
       if (state.noTransfers && state.oneTransfer && state.twoTransfers && state.threeTransfers) {
         state.all = true;
       } else {
