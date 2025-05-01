@@ -7,6 +7,7 @@ const ticketsSlice = createSlice({
     tickets: [], //Пока пустой массив билетов
     error: null, //Пока нет ошибок
     loading: false, //Пока загрузка не идет
+    visibleCount: 5,
   },
   reducers: {
     // Начало запроса (ставлю загрузку в true, начала загружать билеты)
@@ -24,10 +25,14 @@ const ticketsSlice = createSlice({
       state.loading = false;
       state.tickets = action.payload;
     },
+
+    increaseVisibleCount(state) {
+      state.visibleCount += 5;
+    },
   },
 });
 
-export const { fetchTicketsStart, fetchTicketsError, fetchTicketsLoading } = ticketsSlice.actions;
+export const { fetchTicketsStart, fetchTicketsError, fetchTicketsLoading, increaseVisibleCount } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
 
 export const fetchTickets = () => async (dispatch) => {
@@ -50,9 +55,14 @@ export const fetchTickets = () => async (dispatch) => {
         console.log('Произошла ошибка при получении билетов, повторяю запрос', error);
       }
     }
+    //Создаю уникальный id
+    tickets = tickets.map((ticket, index) => ({
+      ...ticket,
+      id: index + '_' + ticket.carrier + '_' + ticket.price,
+    }));
 
     dispatch(fetchTicketsLoading(tickets)); // Сохраняю все билеты в Redux
   } catch (error) {
-    dispatch(fetchTicketsError(error.message)); // Если ошибка 
+    dispatch(fetchTicketsError(error.message)); // Если ошибка
   }
 };

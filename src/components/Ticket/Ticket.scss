@@ -9,7 +9,7 @@
   &__price {
     color: #2196f3;
     font-size: 24px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   &__header {
@@ -45,10 +45,12 @@
     text-transform: uppercase;
     margin-bottom: 5px;
     display: block;
+    font-weight: 600;
   }
 
   &__value {
     color: #4a4a4a;
     font-size: 14px;
+    font-weight: 600;
   }
 }

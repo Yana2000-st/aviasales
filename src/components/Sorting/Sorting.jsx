@@ -10,7 +10,7 @@ const Sorting = () => {
     <>
       <img className="sorting__image" src={plane} alt="Логотип самолета" />
       <div className="sorting">
-        <button className="sorting__button" onClick={() => dispatch(setSort('cheap'))}>
+        <button className="sorting__button sorting__button--active" onClick={() => dispatch(setSort('cheap'))}>
           САМЫЙ ДЕШЕВЫЙ
         </button>
         <button className="sorting__button" onClick={() => dispatch(setSort('fast'))}>

@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.content__wrapper}>
+      <div className={styles.container__content}>
         <Filters />
         <Sorting />
         <TicketList />
