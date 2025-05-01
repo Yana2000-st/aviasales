@@ -6,6 +6,8 @@
   padding: 15px;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  margin-top: 130px;
 
   &__filter {
     font-weight: 500;
@@ -29,5 +31,12 @@
 
   &__label {
     user-select: none;
+  }
+
+  &__option:hover {
+    background-color: #f1faff;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    padding: 5px;
   }
 }

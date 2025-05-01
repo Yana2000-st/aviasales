@@ -17,10 +17,14 @@ const App = () => {
   return (
     <div className={styles.container}>
       <div className={styles.container__content}>
-        <Filters />
-        <Sorting />
-        <TicketList />
-        <Footer />
+        <div style={{ flex: '0 0 220px' }}>
+          <Filters />
+        </div>
+        <div style={{ flex: '1' }}>
+          <Sorting />
+          <TicketList />
+          <Footer />
+        </div>
       </div>
     </div>
   );

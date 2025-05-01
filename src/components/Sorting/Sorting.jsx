@@ -1,22 +1,32 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../../store/slices/sortSlice';
-import './Sorting.scss';
+import styles from './Sorting.module.scss';
 import plane from '../../image/plane.svg';
 
 const Sorting = () => {
   const dispatch = useDispatch();
+  const sort = useSelector((state) => state.sort.sort);
   return (
     <>
-      <img className="sorting__image" src={plane} alt="Логотип самолета" />
-      <div className="sorting">
-        <button className="sorting__button sorting__button--active" onClick={() => dispatch(setSort('cheap'))}>
+      <img className={styles.sorting__image} src={plane} alt="Логотип самолета" />
+      <div className={styles.sorting}>
+        <button
+          className={`${styles.sorting__button} ${sort === 'cheap' ? styles.sorting__button__active : ''}`}
+          onClick={() => dispatch(setSort('cheap'))}
+        >
           САМЫЙ ДЕШЕВЫЙ
         </button>
-        <button className="sorting__button" onClick={() => dispatch(setSort('fast'))}>
+        <button
+          className={`${styles.sorting__button} ${sort === 'fast' ? styles.sorting__button__active : ''}`}
+          onClick={() => dispatch(setSort('fast'))}
+        >
           САМЫЙ БЫСТРЫЙ
         </button>
-        <button className="sorting__button" onClick={() => dispatch(setSort('optimal'))}>
+        <button
+          className={`${styles.sorting__button} ${sort === 'optimal' ? styles.sorting__button__active : ''}`}
+          onClick={() => dispatch(setSort('optimal'))}
+        >
           ОПТИМАЛЬНЫЙ
         </button>
       </div>

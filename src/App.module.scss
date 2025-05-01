@@ -14,5 +14,8 @@
 
   &__content {
     width: 100%;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
   }
 }

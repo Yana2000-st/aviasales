@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Ticket from '../Ticket/Ticket';
 import Loader from '../Loader/Loader';
-import './TicketList.scss';
 
 const TicketList = () => {
   const tickets = useSelector((state) => state.tickets.tickets);
