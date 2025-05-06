@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './Footer.module.scss';
 import { increaseVisibleCount } from '../../store/slices/ticketsSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTickets, selectVisibleCount, selectLoading } from '../../store/slices/selectors';
+import { selectFilteredAndSortedTickets, selectVisibleCount, selectLoading } from '../../store/slices/selectors';
 
 const Footer = () => {
   const dispatch = useDispatch();
-  const tickets = useSelector(selectTickets);
+  const tickets = useSelector(selectFilteredAndSortedTickets);
   const visibleCount = useSelector(selectVisibleCount);
   const loading = useSelector(selectLoading);
   const hasMoreTickets = visibleCount < tickets.length;
