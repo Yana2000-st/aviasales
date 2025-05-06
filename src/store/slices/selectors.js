@@ -1,5 +1,4 @@
 //Селекторы
-
 export const selectTickets = (state) => state.tickets.tickets;
 export const selectError = (state) => state.tickets.error;
 export const selectLoading = (state) => state.tickets.loading;
@@ -9,7 +8,7 @@ export const selectVisibleCount = (state) => state.tickets.visibleCount;
 
 // Получаю список выбранных пересадок для TicketList
 export const selectSelectedStops = (state) => {
-  const filters = state.filters;
+  const filters = selectFilters(state);
   const selectedStops = [];
 
   if (filters.noTransfers) selectedStops.push(0);
@@ -21,8 +20,8 @@ export const selectSelectedStops = (state) => {
 
 // Фильтрация и сортировка для TicketList
 export const selectFilteredAndSortedTickets = (state) => {
-  const tickets = state.tickets.tickets;
-  const sort = state.sort.sort;
+  const tickets = selectTickets(state);
+  const sort = selectSort(state);
   const selectedStops = selectSelectedStops(state);
 
   const filtered = tickets.filter((ticket) =>
