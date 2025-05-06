@@ -1,11 +1,13 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAllFilters, toggleFilter } from '../../store/slices/filtersSlice';
+import { selectFilters } from '../../store/slices/selectors';
 import styles from './Filters.module.scss';
 
 const Filters = () => {
-  const filters = useSelector((state) => state.filters);
+  const filters = useSelector(selectFilters);
   const dispatch = useDispatch();
+
   return (
     <div className={styles.filters}>
       <div className={styles.filters__filter}>КОЛИЧЕСТВО ПЕРЕСАДОК</div>

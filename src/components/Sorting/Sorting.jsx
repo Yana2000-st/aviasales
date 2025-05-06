@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../../store/slices/sortSlice';
 import styles from './Sorting.module.scss';
 import plane from '../../image/plane.svg';
+import { selectSort } from '../../store/slices/selectors';
 
 const Sorting = () => {
   const dispatch = useDispatch();
-  const sort = useSelector((state) => state.sort.sort);
+  const sort = useSelector(selectSort);
   return (
     <>
       <img className={styles.sorting__image} src={plane} alt="Логотип самолета" />

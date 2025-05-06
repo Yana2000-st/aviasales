@@ -1,68 +1,72 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchSearchId, fetchTicketsId } from '../../components/api/api';
 
 const ticketsSlice = createSlice({
   name: 'tickets',
   initialState: {
-    tickets: [], //Пока пустой массив билетов
-    error: null, //Пока нет ошибок
-    loading: false, //Пока загрузка не идет
+    tickets: [],
+    error: null,
+    loading: false,
     visibleCount: 5,
   },
   reducers: {
-    // Начало запроса (ставлю загрузку в true, начала загружать билеты)
-    fetchTicketsStart(state) {
-      state.error = null;
-      state.loading = true;
-    },
-    // Если ошибка при запросе
-    fetchTicketsError(state, action) {
-      state.error = action.payload;
-      state.loading = false;
-    },
-    // Если все успешно сохраняю билеты в состояние
-    fetchTicketsLoading(state, action) {
-      state.loading = false;
-      state.tickets = action.payload;
-    },
-
     increaseVisibleCount(state) {
       state.visibleCount += 5;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTickets.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.tickets = [];
+      })
+      .addCase(fetchTickets.fulfilled, (state, action) => {
+        state.loading = false;
+        state.tickets = action.payload;
+      })
+      .addCase(fetchTickets.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Ошибка при получении билетов';
+      });
+  },
 });
 
-export const { fetchTicketsStart, fetchTicketsError, fetchTicketsLoading, increaseVisibleCount } = ticketsSlice.actions;
+export const { increaseVisibleCount } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
 
-export const fetchTickets = () => async (dispatch) => {
+export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { rejectWithValue }) => {
   try {
-    dispatch(fetchTicketsStart()); // начала загрузку
+    const searchId = await fetchSearchId();
 
-    const searchId = await fetchSearchId(); // Получила id
+    let stop = false;
+    let retryCount = 0;
+    const MAX_RETRIES = 5;
+    let allTickets = [];
 
-    let tickets = []; // Сюда буду собирать билеты
-    let stop = false; // Пока сервер не скажет все
-
-    while (!stop) {
+    while (!stop && retryCount < MAX_RETRIES) {
       try {
-        // Крутимся в цикле, пока сервер шлет билеты
-        const dataTickets = await fetchTicketsId(searchId);
-        tickets = [...tickets, ...dataTickets.tickets]; // Складываю новые билеты
-        stop = dataTickets.stop; // Проверяю, не конец ли
-      } catch (error) {
-        // Если ошибка - повторяю запрос еще раз
-        console.log('Произошла ошибка при получении билетов, повторяю запрос', error);
+        const data = await fetchTicketsId(searchId);
+
+        const ticketsWithId = data.tickets.map((ticket, index) => ({
+          ...ticket,
+          id: `${Date.now()}_${index}`,
+        }));
+
+        allTickets.push(...ticketsWithId);
+        stop = data.stop;
+        retryCount = 0;
+      } catch (err) {
+        retryCount++;
+        if (retryCount >= MAX_RETRIES) {
+          return rejectWithValue('Ошибка загрузки билетов. Проверьте интернет.');
+        }
+        await new Promise((res) => setTimeout(res, 1000));
       }
     }
-    //Создаю уникальный id
-    tickets = tickets.map((ticket, index) => ({
-      ...ticket,
-      id: index + '_' + ticket.carrier + '_' + ticket.price,
-    }));
 
-    dispatch(fetchTicketsLoading(tickets)); // Сохраняю все билеты в Redux
+    return allTickets;
   } catch (error) {
-    dispatch(fetchTicketsError(error.message)); // Если ошибка
+    return rejectWithValue(error.message);
   }
-};
+});

@@ -2,32 +2,10 @@ import React from 'react';
 import styles from './Ticket.module.scss';
 import { addMinutes, format } from 'date-fns';
 
-//Шаблон с гитхаба
-// {
-//   "price": 13400, // Цена в рублях
-//   "carrier": "S7", // Код авиакомпании
-//   "segments": [ //  Массив перелётов
-//     {
-//       "origin": "MOW",  // Код города
-//       "destination": "HKT", // Код города
-//       "date": "2021-09-15T10:45:00.000Z",  // Дата и время вылета туда
-//       "stops": ["HKG", "JNB"],  // Массив кодов (iata) городов с пересадками
-//       "duration": 1275  // Общее время перелёта в минутах
-//     },
-//     {
-//       "origin": "HKT", //  Код города
-//       "destination": "MOW", //  Код города
-//       "date": "2021-09-25T11:20:00.000Z", // Дата и время вылета обратно
-//       "stops": ["HKG"], // Массив кодов (iata) городов с пересадками
-//       "duration": 810 // Общее время перелёта в минутах
-//     }
-//   ]
-// }
-
 // Форматирую время в красивую строку
 const formatDuration = (minutes) => {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
+  const hours = Math.floor(minutes / 60); // Получаю количество полных часов
+  const mins = minutes % 60; // Получаю количество оставшихся минут
   return `${hours}ч ${mins}м`;
 };
 
