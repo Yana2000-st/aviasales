@@ -32,7 +32,6 @@ const TicketList = () => {
       {sortedTickets.slice(0, visibleCount).map((ticket) => (
         <Ticket key={ticket.id} ticket={ticket} />
       ))}
-      {/* {loading && <Loader />} */}
     </div>
   );
 };
