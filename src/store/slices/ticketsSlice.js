@@ -13,38 +13,38 @@ const ticketsSlice = createSlice({
     increaseVisibleCount(state) {
       state.visibleCount += 5;
     },
+    addTickets(state, action) {
+      state.tickets.push(...action.payload);
+    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchTickets.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.tickets = [];
       })
-      .addCase(fetchTickets.fulfilled, (state, action) => {
+      .addCase(fetchTickets.fulfilled, (state) => {
         state.loading = false;
-        state.tickets = action.payload;
       })
       .addCase(fetchTickets.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Ошибка при получении билетов';
+        state.error = action.payload;
       });
   },
 });
 
-export const { increaseVisibleCount } = ticketsSlice.actions;
+export const { increaseVisibleCount, addTickets } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
 
-export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { rejectWithValue }) => {
+export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { dispatch, rejectWithValue }) => {
   try {
     const searchId = await fetchSearchId();
 
     let stop = false;
     let retryCount = 0;
-    const MAX_RETRIES = 5;
-    let allTickets = [];
 
-    while (!stop && retryCount < MAX_RETRIES) {
+    while (!stop) {
       try {
         const data = await fetchTicketsId(searchId);
 
@@ -53,20 +53,19 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, {
           id: `${Date.now()}_${index}`,
         }));
 
-        allTickets.push(...ticketsWithId);
+        dispatch(addTickets(ticketsWithId));
+
         stop = data.stop;
         retryCount = 0;
       } catch (err) {
         retryCount++;
-        if (retryCount >= MAX_RETRIES) {
+        if (retryCount >= 5) {
           return rejectWithValue('Ошибка загрузки билетов. Проверьте интернет.');
         }
         await new Promise((res) => setTimeout(res, 1000));
       }
     }
-
-    return allTickets;
   } catch (error) {
-    return rejectWithValue(error.message);
+    return rejectWithValue(error.message || 'Ошибка загрузки');
   }
 });

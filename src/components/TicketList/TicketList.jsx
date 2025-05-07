@@ -15,7 +15,7 @@ const TicketList = () => {
   const visibleCount = useSelector(selectVisibleCount);
   const sortedTickets = useSelector(selectFilteredAndSortedTickets);
 
-  if (loading) {
+  if (sortedTickets.length === 0 && loading) {
     return <Loader />;
   }
 
@@ -28,11 +28,12 @@ const TicketList = () => {
   }
 
   return (
-    <>
+    <div>
       {sortedTickets.slice(0, visibleCount).map((ticket) => (
         <Ticket key={ticket.id} ticket={ticket} />
       ))}
-    </>
+      {/* {loading && <Loader />} */}
+    </div>
   );
 };
 
